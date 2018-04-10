@@ -1,0 +1,31 @@
+{
+  "name": "votingapp",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000v\u0000o\u0000t\u0000i\u0000n\u0000g\u0000A\u0000p\u0000p\u0000\r\u0000 \u0000",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jwang1013/votingApp.git"
+  },
+  "author": "jwang1013",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jwang1013/votingApp/issues"
+  },
+  "homepage": "https://github.com/jwang1013/votingApp#readme",
+  "dependencies": {
+    "angular-jwt": "^0.1.9",
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.18.2",
+    "dotenv": "^5.0.1",
+    "express": "^4.16.3",
+    "jsonwebtoken": "^8.2.1",
+    "mongodb": "^3.0.6",
+    "mongoose": "^5.0.14",
+    "morgan": "^1.9.0"
+  }
+}
