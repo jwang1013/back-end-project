@@ -10,9 +10,10 @@ var port = process.env.PORT || 8000;
 
 var express = require('express');
 var morgan = require('morgan');
-var mongoose = requrie('mongoose');
+var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var dotenv = require('dotenv');
+
 
 //Create an express application
 
@@ -48,9 +49,9 @@ mongoose.connection.on('error', function() {
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false}));
-app.use(express.static(_dirname + '/public'));
+app.use(express.static(__dirname + '/public'));
 app.get("*", function (req, res){
-    res.sendFile(_dirname + '/public/index.html');
+    res.sendFile(__dirname + '/public/index.html');
 });
 
 //Start up our server
