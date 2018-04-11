@@ -2,6 +2,26 @@
 
     var app = angular.module('app', ['ngRoute', 'angular-jwt']);
 
+   app.run(function ($http, $rootScope, $location, $window) {
+        $http.defaults.headers.common.Authorization = 'Bearer ' + $window.localStorage.token;
+
+        $rootScope.$on('$routeChangeStart', function (event, nextRoute, currentRoute) {
+            if (nextRoute.access !== undefined && nextRoute.access.restricted === true && !$window.localStorage.token) {
+                event.preventDefault();
+                $location.path('/login');
+            }
+            if ($window.localStorage.token && nextRoute.access.restricted === true) {
+                $http.post('/api/verify', {token: $window.localStorage.token})
+                .then(function (response) {
+                    console.log('Your token is valid');
+                }, function (err) {
+                    delete $window.localStorage.token;
+                    $location.path('/login');
+                })
+            }
+        });
+    });
+
     app.config(function($routeProvider, $locationProvider){
 
         $locationProvider.html5Mode(true);
@@ -74,9 +94,24 @@
 
     app.controller('LoginController', LoginController);
 
-    function LoginController($location, $window) {
+    function LoginController($location, $window, $http) {
         var vm = this;
         vm.title = "LoginController";
+        vm.error = '';
+        vm.login = function() {
+            if (vm.user) {
+                $http.post('/api/login', vm.user)
+                .then(function (response) {
+                    $window.localStorage.token = response.data;
+                    $location.path('/profile');
+                }, function (err) {
+                    vm.error = err;
+                });
+            }
+            else {
+                console.log('No credentials supplied');
+            }
+        }
     }
 
 
@@ -90,6 +125,8 @@
         vm.register = function() {
             $http.post('/api/register', vm.user)
                  .then(function(response){
+                     $window.localStorage.token = response.data;
+                     $location.path('/profile');
                      console.log(response);
                  }, function (err) {
                      vm.error = err.data.errmsg;
@@ -119,9 +156,16 @@
 
     app.controller('ProfileController', ProfileController);
 
-    function ProfileController($location, $window) {
+    function ProfileController($location, $window, jwtHelper) {
         var vm = this;
         vm.title = "ProfileController";
+        vm.user = null;
+        var token = $window.localStorage.token;
+        var payload = jwtHelper.decodeToken(token).data;
+        if (payload) {
+            vm.user = payload;
+        }
+
     }
 
 
