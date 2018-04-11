@@ -138,9 +138,39 @@
 
     app.controller('PollsController', PollsController);
 
-    function PollsController($location, $window) {
+    function PollsController($location, $window, $http) {
         var vm = this;
         vm.title = "PollsController";
+        vm.poll = {
+            options: [],
+            name:""
+        }
+        vm.poll.options = [{
+            name: '',
+            votes: 0
+        }]
+
+        vm.addOption = function() {
+            vm.poll.options.push({
+                name: '',
+                votes: 0
+            });
+        }
+
+        vm.addPoll = function() {
+            if (!vm.poll) {
+                console.log('Invalid data supplied!');
+                return;
+            }
+            $http.post('/api/polls', vm.poll)
+            .then(function (response) {
+                console.log(response);
+            }, function (err) {
+                console.log(err);
+            });
+        }
+
+
     }
 
 
@@ -164,6 +194,12 @@
         var payload = jwtHelper.decodeToken(token).data;
         if (payload) {
             vm.user = payload;
+        }
+
+        vm.logOut = function () {
+            delete $window.localStorage.token;
+            vm.user = null;
+            $location.path('/login');
         }
 
     }
