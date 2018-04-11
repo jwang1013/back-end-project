@@ -6,6 +6,10 @@ var db = 'mongodb://localhost:27017/free-code-camp-voting';
 
 var port = process.env.PORT || 8000;
 
+// Load in router
+
+var router = require('./routes/api');
+
 // Load in node modules
 
 var express = require('express');
@@ -45,11 +49,13 @@ mongoose.connection.on('error', function() {
     console.log('An error has occured connecting to ' + db);
 });
 
-// configure express middleware
+// Configure express middleware
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false}));
+app.use('/node_modules', express.static(__dirname + '/node_modules'));
 app.use(express.static(__dirname + '/public'));
+app.use('/api', router);
 app.get("*", function (req, res){
     res.sendFile(__dirname + '/public/index.html');
 });
