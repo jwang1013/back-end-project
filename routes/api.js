@@ -5,17 +5,50 @@ var jwt = require('jsonwebtoken');
 var User = require('../models/user');
 var Poll = require('../models/polls');
 
+// test populate route to get all polls by user id
+
+router.get('/tester', function(request, response){
+    User.findOne({name: 'e'})
+    .populate('polls')
+    .exec(function (err, polls) {
+        if (err) {
+            return response.status(400).send(err);
+        }
+        return response.status(200).send(polls);
+    })
+});
+
+// Get all polls
+
+router.get('/polls', function(request, response) {
+    Poll.find({}, function(err, polls) {
+        if (err) {
+            return response.status(400).send(err);
+        }
+        if (polls.length < 1) {
+            return response.status(400).send('No polls here yet');
+        }
+        return response.status(200).send(polls);
+    });
+});
 // Create a new poll
 
 router.post('/polls', authenticate, function (request, response){
-    if (!request.body.polls) {
+    console.log(request.body);
+    if (!request.body.options || ! request.body.name) {
         return response.status(400).send('No poll data supplied!');
     }
     var poll = new Poll();
-    poll.name = request.body.poll.name;
-    poll.options = request.body.poll.options;
-    var token = request.headers.authorization.split(' ')[1];
-    
+    poll.name = request.body.name;
+    poll.options = request.body.options;
+    poll.user = request.body.id;
+
+    poll.save(function (err, res) {
+        if (err) {
+            return response.status(400).send(err);
+        }
+        return response.status(201).send(res);
+    })
 })
 
 

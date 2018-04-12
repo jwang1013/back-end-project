@@ -8,3 +8,7 @@ placeholder="Option name" class="form-control" style="padding: 10px;">
 <button ng-click="vm.addOption()" class="btn btn-primary">Add option</button>
 </br></br>
 <button ng-click="vm.addPoll()" ng-disabled="!vm.poll.name">Add poll</button>
+<hr>
+<ul>
+    <li ng-repeat="poll in vm.polls">{{poll.name}} --- {{poll._id}}</li>
+</ul>

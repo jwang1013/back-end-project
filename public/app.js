@@ -138,12 +138,16 @@
 
     app.controller('PollsController', PollsController);
 
-    function PollsController($location, $window, $http) {
+    function PollsController($location, $window, $http, jwtHelper) {
         var vm = this;
+        var user = jwtHelper.decodeToken($window.localStorage.token);
+        var id = user.data._id;
         vm.title = "PollsController";
+        vm.polls = [];
         vm.poll = {
+            name:"",
             options: [],
-            name:""
+            user: id
         }
         vm.poll.options = [{
             name: '',
@@ -157,6 +161,16 @@
             });
         }
 
+        vm.getAllPolls = function () {
+            $http.get('/api/polls')
+            .then(function(response){
+                vm.polls = response.data;
+            }, function (err) {
+                console.log(err);
+            });
+        }
+        vm.getAllPolls();
+
         vm.addPoll = function() {
             if (!vm.poll) {
                 console.log('Invalid data supplied!');
@@ -164,8 +178,10 @@
             }
             $http.post('/api/polls', vm.poll)
             .then(function (response) {
-                console.log(response);
+                vm.poll = {};
+                vm.getAllPolls();
             }, function (err) {
+                vm.poll = {};
                 console.log(err);
             });
         }
