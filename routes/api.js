@@ -74,7 +74,7 @@ router.put('/polls/', function(request, response) {
         if (err) {
             return response.status(400).send(err);
         }
-        console.log(poll);
+        console.log('in api print poll ');
         for (var i = 0; i < poll.options.length; i++) {
             if (poll.options[i]._id.toString() === request.body.vote) {
                 console.log('hit');
@@ -98,7 +98,7 @@ router.put('/polls/', function(request, response) {
 
 // Get current poll
 
-router.get('poll/:id', function(request, response){
+router.get('/polls/:id', function(request, response){
     Poll.findOne({ _id: request.params.id }, function(err, poll) {
         if (err) {
             return response.status(400).send(err);
