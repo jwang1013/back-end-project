@@ -9,14 +9,14 @@ var PollsSchema = new Schema ({
     },
     options: [
         {
-        name: {
-            type: String,
-            required: true,
-        },
-        votes: {
-            type: Number,
-            default: 0
-        }
+            name: {
+                type: String,
+                required: true,
+            },
+            votes: {
+                type: Number,
+                default: 0
+            }
         }
     ],
     createdAT: {

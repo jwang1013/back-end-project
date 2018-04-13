@@ -1,14 +1,21 @@
-<h3>{{vm.title}}</h3>
-<hr>
-<input type="text" ng-model="vm.poll.name" placeholder="Name of poll..">
-<hr>
-<input type="text" ng-model="vm.poll.options[$index].name" ng-repeat="option in vm.poll.options" 
-placeholder="Option name" class="form-control" style="padding: 10px;">
-<hr>
-<button ng-click="vm.addOption()" class="btn btn-primary">Add option</button>
-</br></br>
-<button ng-click="vm.addPoll()" ng-disabled="!vm.poll.name">Add poll</button>
-<hr>
-<ul>
-    <li ng-repeat="poll in vm.polls">{{poll.name}} --- {{poll._id}}</li>
-</ul>
+<div>
+        <h3>{{vm.title}}</h3>
+        <hr>
+        <div class="add" ng-if="vm.isLoggedIn() === true">
+        <input type="text" ng-model="vm.poll.name" class="form-control" placeholder="Poll Name">
+        <br>
+        <input type="text" ng-model="vm.poll.options[$index].name" class="form-control" placeholder="Poll Options" ng-repeat="poll in vm.poll.options track by $index" style="margin-bottom:10px">
+        <br>
+        <button ng-click="vm.addOption()" class="btn btn-warning btn-block" ng-hide="vm.poll.options.length === 5">Add Poll Option</button>    
+        <br>
+        <button ng-click="vm.addPoll()" class="btn btn-primary btn-block">Add Poll</button>
+        </div>
+    </div>
+    <hr>
+    <ul>
+        <li ng-repeat="poll in vm.polls">
+           <a href="/poll/{{poll._id}}">
+            {{poll.name}}
+           </a>
+        </li>
+    </ul>

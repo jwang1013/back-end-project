@@ -49,6 +49,21 @@ mongoose.connection.on('error', function() {
     console.log('An error has occured connecting to ' + db);
 });
 
+// Node process event to fire upon manual shutdown of application
+
+process.on('SIGINT', function() {
+    mongoose.connection.close(function() {
+        console.log('Mongoose default connection disconnected through application termination');
+        process.exit(0);
+    });
+});
+
+// Node process event to fire on forced termination of aplication
+
+process.on('exit', function(code) {
+    console.log('Node process closed with a code of ' + code);
+});
+
 // Configure express middleware
 app.use(morgan('dev'));
 app.use(bodyParser.json());
@@ -66,4 +81,4 @@ app.listen(port, function() {
     console.log('Listening on ' + port);
 });
 
-console.log(process.env.secret);
+//console.log(process.env.secret);
