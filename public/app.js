@@ -62,7 +62,7 @@
             }
         });
 
-        $routeProvider.when('/polls/:id', {
+        $routeProvider.when('/poll/:id', {
             templateUrl: './templates/poll.html',
             controller: 'PollController',
             controllerAs: 'vm',
@@ -167,6 +167,7 @@
                 votes: 0
             }]
         }
+        vm.dup = false;
         vm.isLoggedIn = function() {
             if (!$window.localStorage.token) {
                 return false;
@@ -200,6 +201,7 @@
                     token: $window.localStorage.token
                 }
                 $http.post('/api/polls', payload).then(onSuccess, onError);
+                
             }
             else {
                 console.log('No poll data supplied');
@@ -207,15 +209,29 @@
         }
 
         vm.addOption = function() {
-            vm.pooll.options.push({
+            var name = vm.poll.options[vm.poll.options.length - 1].name
+            for (var i = 0; i < vm.poll.options.length - 1; i++) {
+                if (vm.poll.options[i].name === name) {
+                    vm.dup = true;
+                    return alert('No duplicate options');
+                }
+                vm.dup = false;
+            }
+            vm.poll.options.push({
                 name: '',
                 votes: 0
             });
         }
-
+        
         var onSuccess = function(response) {
             console.log(response.data);
-            vm.poll = {};
+            vm.poll = {
+                name:'',
+                options: [{
+                    name: '',
+                    votes: 0
+                }]
+            }   
             vm.getAllPolls();
         }
         var onError = function(err) {
@@ -249,10 +265,11 @@
         vm.getPoll = function() {
             var id = $routeParams.id;
             $http.get('/api/poll/' + id).then(function(response) {
-                /*vm.id = response.data._id;
+                console.log(response.data);
+                vm.id = response.data._id;
                 vm.owner = response.data.owner;
                 vm.poll = response.data.options;
-                console.log(vm.poll);*/
+                console.log(vm.poll);
                 vm.data = response.data;
                 google.charts.load('current', {'packages':['corechart']});
                 google.charts.setOnLoadCallback(drawChart);
@@ -308,8 +325,9 @@
         var token = $window.localStorage.token;
 
         vm.getPollsByUser = function() {
-            $http.get('/api/user-polls' + vm.currentUser.name).then(function(response) {
-                console.log(response);
+            $http.get('/api/user-polls/' + vm.currentUser.name)
+            .then(function(response) {
+                console.log(response.data);
                 vm.polls = response.data;
             }, function(err){
                 console.log(err);
@@ -318,7 +336,7 @@
         
         vm.deletePoll = function(id) {
             if (id !== null) {
-                $http.delete('./api/polls' + id).then(function(response) {
+                $http.delete('/api/polls/' + id).then(function(response) {
                     vm.getPollsByUser();
                 }, function(err) {
                     console.log(err);

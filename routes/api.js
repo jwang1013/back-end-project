@@ -98,7 +98,7 @@ router.put('/polls/', function(request, response) {
 
 // Get current poll
 
-router.get('/polls/:id', function(request, response){
+router.get('/poll/:id', function(request, response){
     Poll.findOne({ _id: request.params.id }, function(err, poll) {
         if (err) {
             return response.status(400).send(err);
@@ -121,7 +121,7 @@ router.put('/polls/add-option', function(request, response) {
             return response.status(400).send(err);
         }
         for (var i = 0; i < poll.options.length; i++) {
-            if (poll.options[i],name === option) {
+            if (poll.options[i].name === option) {
                 return response.status(403).send({
                     message: 'Option already exists!'
                 })
@@ -161,7 +161,7 @@ router.get('/polls', function(request, response) {
 // Create a new poll
 
 router.post('/polls', authenticate, function (request, response){
-    if (!request.body.options || ! request.body.name) {
+    if (!request.body.options || !request.body.name) {
         return response.status(400).send('No poll data supplied!');
     }
     var poll = new Poll();

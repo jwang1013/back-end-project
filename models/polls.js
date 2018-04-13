@@ -1,25 +1,25 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var PollsSchema = new Schema ({
+var PollSchema = new Schema({
     name: {
         type: String,
-        required: true,
+        required: true, 
         unique: true
     },
     options: [
         {
             name: {
                 type: String,
-                required: true,
+                required: true
             },
             votes: {
-                type: Number,
-                default: 0
+                default: 0,
+                type: Number
             }
         }
     ],
-    createdAT: {
+    createdAt: {
         type: Date,
         default: Date.now()
     },
@@ -29,6 +29,6 @@ var PollsSchema = new Schema ({
     }
 });
 
-var Model = mongoose.model('Polls', PollsSchema);
+var Model = mongoose.model('Polls', PollSchema);
 
 module.exports = Model;
