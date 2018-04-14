@@ -1,6 +1,6 @@
 //Create a db connection string
 
-var db = 'mongodb://localhost:27017/free-code-camp-voting';
+var db = 'mongodb://heroku_mzmrmrxg:mmi4drk3pj9v3878t3v593qf6t@ds239439.mlab.com:39439/heroku_mzmrmrxg';
 
 //Create a port for server to listen on
 
