@@ -8,7 +8,7 @@
         <br>
         <button ng-click="vm.addOption()" class="btn btn-warning btn-block">Add Poll Option</button>    
         <br>
-        <button ng-click="vm.addPoll()" class="btn btn-primary btn-block" ng-disabled="vm.dup">Add Poll</button>
+        <button ng-click="vm.addPoll()" class="btn btn-primary btn-block" ng-disabled="vm.dup || !vm.poll.name || !vm.poll.options[0].name">Add Poll</button>
         </div>
     </div>
     <hr>
